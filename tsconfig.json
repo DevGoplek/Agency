@@ -1,0 +1,19 @@
+{
+  "fragments": [
+    {
+      "key": "title",
+      "name": "Title",
+      "type": "html"
+    }
+  ],
+  "children": {
+    "fragments": [
+      {
+        "key": "img",
+        "name": "Image",
+        "type": "image",
+        "image-quality": 1
+      }
+    ]
+  }
+}

@@ -23,38 +23,40 @@ $home_guid = 'home';
 
 
 /*
- * Portfolio GUID
+ * Cover GUID
  */
-$portfolio_guid = 'Q_W5amrXij';
+$cover_guid = 'ypwMvarfAx';
 
 
+/*
+ * Us GUID
+ */
+$us_guid = 's3t6CaVWem';
+
+
+/*
+ * Services GUID
+ */
+$services_guid = 'yUC1gA5hw3';
+
+/*
+ * Row GUID
+ */
+$row_guid = 'NPqI6eLV2e';
+
+/*
+ * Products GUID
+ */
+$products_guid = 'HjA9dlccKM';
+
+/*
+ * List GUID
+ */
+$list_guid = "3cnyUXjvyY";
 /*
  * Contact GUID
  */
-$contact_guid = '7DyzZP31Jq';
-
-
-/*
- * Foot GUID
- */
-$foot_guid = '1zC_4s8H3Y';
-
-
-/*
- * Account GUID
- */
-$account_guid = '5uL89C3LEv';
-
-/*
- * Artisticas GUID
- */
-$artisticas_guid = '2jPMi9PZD9';
-
-/*
- * Clients GUID
- */
-$clients_guid = 'mL88nDx-jM';
-
+$contact_guid = 'u_Iimwg2_2';
 
 // ---------------------------------------------------------------------
 // | Fragment Helpers                                                   |
@@ -153,12 +155,11 @@ if ($page instanceof Page)
 $result = Page::search(array(
     'idparent'  => $root_id,
     'fragments' => array(
-        'heading',
-        'intro',
-        'body',
-        'intro-title',
-        'intro-body',
-        'rights-text'
+        'img',
+        'background',
+        'title',
+        'desc',
+        'stat'
     ),
     'sortBy'    => 'created ASC'
 ));

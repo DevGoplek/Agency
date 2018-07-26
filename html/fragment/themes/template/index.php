@@ -4,6 +4,54 @@ include_once 'globals.php';
 include_once 'util/fragment_helpers.php';
 include_once 'util/get_images.php';
 
+// region cover
+$cover_section = find_page_by_guid($cover_guid, $root_pages);
+// endregion
+
+// region us
+$us_section = find_page_by_guid($us_guid, $root_pages);
+// endregion
+
+//region services
+$services_section = find_page_by_guid($services_guid, $root_pages);
+$result = Page::search(array(
+    'idparent'  => $services_section->idpage,
+    'fragments' => array('desc','title'),
+    'sortBy'    => 'created ASC'
+));
+$services_child = $result['records'];
+// endregion
+
+//region row
+$row_section = find_page_by_guid($row_guid, $root_pages);
+$result = Page::search(array(
+    'idparent'  => $row_section->idpage,
+    'fragments' => array('desc','stat'),
+    'sortBy'    => 'created ASC'
+));
+$row_child = $result['records'];
+// endregion
+
+//region products
+$products_section = find_page_by_guid($products_guid, $root_pages);
+$result = Page::search(array(
+    'idparent'  => $products_section->idpage,
+    'fragments' => array('img'),
+    'sortBy'    => 'created ASC'
+));
+$products_child = $result['records'];
+// endregion
+
+//region list
+$list_section = find_page_by_guid($list_guid, $root_pages);
+$result = Page::search(array(
+    'idparent'  => $products_section->idpage,
+    'fragments' => array('item'),
+    'sortBy'    => 'created ASC'
+));
+$list_child = $result['records'];
+// endregion
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" itemscope itemtype="http://schema.org/Thing" lang="es-MX">
@@ -17,11 +65,15 @@ include_once 'util/get_images.php';
         <!-- Outer wrapper -->
         <div class="outer-wrapper">
             <!-- Outer wrapper -->
-            <section class="block cover" id="cover" >
-                        <div class="content callout large">
+
+            <section class="block cover"  id="cover" >
+                <?php
+                $image_attrs= Fragment::elementAttributes($cover_section->fragments['background']->value);
+                $src = $image_attrs['src']; ?>
+                        <div class="content  callout large"style="background: url('<?=$src?>')">
                             <div class="row column text-center">
-                                <h1>Changing the World Through Design</h1>
-                                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.</p>
+                                <h1><?= $cover_section->fragments['title']->value?></h1>
+                                <p class="lead"><?= $cover_section->fragments['desc']->value?></p>
                                 <a href="#" class="button large">Learn More</a>
                                 <a href="#" class="button large hollow">Learn Less</a>
                             </div>
@@ -32,37 +84,34 @@ include_once 'util/get_images.php';
             <article class="grid-container">
                 <!-- Block Us -->
                 <section class="block us" id="nosotros">
-                    <div class="holder grid-x grid-margin-x">
-                        <div class="container-fluid">
-                            <div class="header medium-6 cell small-order-2 medium-order-1">
+                    <?php
+                    $image_attrs= Fragment::elementAttributes($us_section->fragments['img']->value);
+                    $src = $image_attrs['src']; ?>
+                    <div class="grid-x grid-margin-x">
+                            <div class="medium-6 cell small-order-2 medium-order-1">
                                 <!-- Block Header -->
-                                <h2>Our Agency, our selves.</h2>
-                                <p>Vivamus luctus urna sed urna ultricies ac tempor dui sagittis. In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna diam porttitor mauris, quis sollicitudin sapien justo in libero. Vestibulum mollis mauris enim. Morbi euismod magna ac lorem rutrum elementum. Donec viverra auctor.</p>
+                                <h2><?= $us_section->fragments['title']->value?></h2>
+                                <p><?= $us_section->fragments['desc']->value?></p>
                             </div>
                             <div class="content medium-6 cell small-order-1 medium-order-2">
                                 <!-- Block Content -->
-                                <img class="thumbnail" src="https://placehold.it/750x350">
+                                <img class="thumbnail" src="<?=$src?>">
                             </div>
-                        </div>
                     </div>
                 </section>
                 <!-- /. -->
 
                 <!-- Block  -->
                 <section class="block " id="">
-                    <div class="holder grid-x grid-margin-x">
-                        <div class="medium-4 cell">
-                            <h3>Photoshop</h3>
-                            <p>Vivamus luctus urna sed urna ultricies ac tempor dui sagittis. In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna.</p>
-                        </div>
-                        <div class="medium-4 cell">
-                            <h3>Javascript</h3>
-                            <p>Vivamus luctus urna sed urna ultricies ac tempor dui sagittis. In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna.</p>
-                        </div>
-                        <div class="medium-4 cell">
-                            <h3>Marketing</h3>
-                            <p>Vivamus luctus urna sed urna ultricies ac tempor dui sagittis. In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna.</p>
-                        </div>
+                    <div class="grid-x grid-margin-x">
+                        <?php
+                        foreach($services_child as $page){
+                        ?>
+                            <div class="medium-4 cell">
+                                <h3><?= $page->fragments['title']->value?></h3>
+                                <p><?= $page->fragments['desc']->value?></p>
+                            </div>
+                       <?php }?>
                     </div>
                 </section>
                 <!-- /. -->
@@ -71,64 +120,35 @@ include_once 'util/get_images.php';
                 <section class="block " id="">
                     <div class="row column">
                         <ul class="vertical medium-horizontal menu expanded text-center">
-                            <li><a href="#"><div class="stat">28</div><span>Websites</span></a></li>
-                            <li><a href="#"><div class="stat">43</div><span>Apps</span></a></li>
-                            <li><a href="#"><div class="stat">95</div><span>Ads</span></a></li>
-                            <li><a href="#"><div class="stat">59</div><span>Cakes</span></a></li>
-                            <li><a href="#"><div class="stat">18</div><span>Logos</span></a></li>
+                            <?php
+                            foreach($row_child as $page){
+                            ?>
+                                <li><a href="#"><div class="stat"><?= $page->fragments['stat']->value?></div><span><?= $page->fragments['desc']->value?></span></a></li>
+                            <?php }?>
                         </ul>
                     </div>
                 </section>
                 <hr>
                 <!-- Block  -->
                 <section class="block " id="">
-                        <div class="container-fluid">
-                            <div class="header">
-                                <div class="row column">
-                                    <h3>Our Recent Work</h3>
-                                </div>
-                            </div>
-                            <div class="content">
-                                <div class="grid-x grid-margin-x medium-up-3 large-up-4">
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                    <div class="cell">
-                                        <img class="thumbnail" src="https://placehold.it/550x550">
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="header">
+                        <div class="row column">
+                            <h3><?= $products_section->fragments['title']->value?></h3>
                         </div>
+                    </div>
+                    <div class="content">
+                        <div class="grid-x grid-margin-x medium-up-3 large-up-4">
+                            <?php
+                            foreach($products_child as $page){
+                                $image_attrs= Fragment::elementAttributes($page ->fragments['img']->value);
+                                $src = $image_attrs['src'];
+                            ?>
+                                <div class="cell">
+                                    <img class="thumbnail" src="<?=$src?>">
+                                </div>
+                            <?php }?>
+                        </div>
+                    </div>
                 </section>
                 <!-- /. -->
                 <hr>
@@ -136,50 +156,38 @@ include_once 'util/get_images.php';
             <article class="grid-container">
                 <div class="row column">
                     <ul class="menu">
-                        <li><a href="#">One</a></li>
-                        <li><a href="#">Two</a></li>
-                        <li><a href="#">Three</a></li>
-                        <li><a href="#">Four</a></li>
+                        <?php
+                        foreach($list_child as $page){
+                        ?>
+                        <li><a href="#"><?=$page->fragments['item']->value?></a></li>
+                        <?php } ?>
                     </ul>
                 </div>
             </article>
             <!-- Block Contact -->
             <section class="block contact" id="contacto">
-                <div class="holder">
-                    <div class="container-fluid">
-                        <div class="header">
-                            <h2 class="title">Contacto</h2>
-                        </div>
-                        <div class="content">
-
-                            <!-- Contact Info -->
-                            <div class="contact-info">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="phones">
-                                            <div><a href="tel:0000000000">(000) 000 0000</a></div>
-                                            <div><a href="tel:0000000000">(000) 000 0000</a></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <div class="address">
-                                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Contact Form -->
-                            <form class="contact-form">
-                                <input name="Nombre" placeholder="Nombre" type="text">
-                                <input name="Email" placeholder="Email" type="text">
-                                <textarea name="Mensaje" placeholder="Mensaje"></textarea>
-
-                                <input type="submit" value="Enviar">
-                            </form>
-
-                        </div>
+                <div class="grid-x grid-margin-x">
+                    <div class="medium-6 cell">
+                        <h3>Contact Me</h3>
+                        <p>Vivamus hendrerit arcu sed erat molestie vehicula. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor.</p>
+                        <ul class="menu">
+                            <li><a href="#">Dribbble</a></li>
+                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">Yo</a></li>
+                        </ul>
+                    </div>
+                    <div class="medium-6 cell">
+                        <label>Name
+                            <input type="text" placeholder="Name">
+                        </label>
+                        <label>Email
+                            <input type="text" placeholder="Email">
+                        </label>
+                        <label>
+                            Message
+                            <textarea placeholder="holla at a designer"></textarea>
+                        </label>
+                        <input type="submit" class="button expanded" value="Submit">
                     </div>
                 </div>
             </section>

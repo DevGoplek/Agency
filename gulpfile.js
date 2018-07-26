@@ -91,6 +91,21 @@ gulp.task('css', () => {
         .pipe(gulp.dest(destPath.css));
 });
 
+gulp.task('css-foundation', () => {
+    // Source files.
+    let srcFiles = [
+        `${srcPath.css}foundation.css`
+    ];
+
+    // Output file.
+    let outputFile = 'foundation.min.css';
+
+    return gulp.src(srcFiles)
+        .pipe(concat(outputFile))
+        .pipe(uglifycss())
+        .pipe(gulp.dest(destPath.css));
+});
+
 
 /**
  * Minify and copy css vendor files.
@@ -287,7 +302,7 @@ gulp.task('stylus', () => {
  * @param done
  */
 gulp.task('build', (done) => {
-    sequence('css', 'css-vendor', 'fonts', 'imgs', 'js', 'js-vendor', 'html', 'favicon', done);
+    sequence('css', 'css-foundation','css-vendor', 'fonts', 'imgs', 'js', 'js-vendor', 'html', 'favicon', done);
 });
 
 
