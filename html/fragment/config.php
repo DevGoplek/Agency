@@ -1,11 +1,11 @@
 <?php
 /**
  * Fragment Configuration File
- * Automatically created: 25/Jul/2018 11:34:23
+ * Automatically created: 02/Aug/2018 13:55:12
  */
 
 /** MySQL database name */
-define('FG_DB_NAME', 'boilerplate');
+define('FG_DB_NAME', 'agency');
 
 /** MySQL database name */
 define('FG_DB_USER', 'root');
